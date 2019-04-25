@@ -1,0 +1,3 @@
+service {
+         "XSODataExample.db::tables.myTable" as "Table";
+}

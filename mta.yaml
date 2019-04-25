@@ -1,0 +1,58 @@
+ID: XSODataLocal
+_schema-version: '2.1'
+description: Example of consuming local XSODATA in SAPUI5
+version: 0.0.1
+modules:
+  - name: db
+    type: hdb
+    path: db
+    requires:
+      - name: hdi_db
+    parameters:
+      config:
+        database_id: dce56bd3-7340-4620-839c-c9f640f0f08c
+  - name: srv
+    type: nodejs
+    path: srv
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+    provides:
+      - name: srv_api
+        properties:
+          url: '${default-url}'
+    requires:
+      - name: hdi_db
+      - name: db
+  - name: web
+    type: html5
+    path: web
+    parameters:
+      disk-quota: 256M
+      memory: 256M
+    build-parameters:
+      builder: grunt
+    requires:
+      - name: uaa_XSODataLocal
+      - name: dest_XSODataLocal
+      - name: srv_api
+        group: destinations
+        properties:
+          name: srv_api
+          url: '~{url}'
+resources:
+  - name: hdi_db
+    properties:
+      hdi-container-name: '${service-name}'
+    type: com.sap.xs.hdi-container
+  - name: uaa_XSODataLocal
+    parameters:
+      path: ./xs-security.json
+      service-plan: application
+      service: xsuaa
+    type: org.cloudfoundry.managed-service
+  - name: dest_XSODataLocal
+    parameters:
+      service-plan: lite
+      service: destination
+    type: org.cloudfoundry.managed-service

@@ -1,0 +1,8 @@
+namespace XSODataExample.db;
+
+context tables {
+  entity myTable{
+  	key MyKey : String(10);
+  		MyValue : String(20);
+  }
+};
